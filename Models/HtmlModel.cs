@@ -2,7 +2,7 @@
 {
     public class HtmlHuman
     {
-        public Doctor Doctor { get; set; }
-        public Human Client { get; set; }
+        public Doctor? Doctor { get; set; }
+        public Human? Client { get; set; }
     }
 }

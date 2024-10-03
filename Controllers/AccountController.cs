@@ -26,7 +26,6 @@ namespace MedicalClinic.Controllers
             var userId = httpContextAccessor.HttpContext.Session.GetInt32("UserId");
             if (userId != null)
             {
-
                 Human human = context.Humans.FirstOrDefault(i => i.Id == userId);
                 if (human != null)
                 {
@@ -136,6 +135,10 @@ namespace MedicalClinic.Controllers
                             .Include(s => s.Service)
                             .ToList();
                     }
+                }
+                else
+                {
+                    return Forbid();
                 }
                 if (services != null)
                 {
