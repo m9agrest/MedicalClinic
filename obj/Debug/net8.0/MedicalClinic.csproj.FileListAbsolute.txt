@@ -1,0 +1,7 @@
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.AssemblyInfoInputs.cache
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.AssemblyInfo.cs
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.csproj.CoreCompileInputs.cache
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.RazorAssemblyInfo.cache
+C:\Users\mina987\source\repos\MedicalClinic\obj\Debug\net8.0\MedicalClinic.RazorAssemblyInfo.cs
