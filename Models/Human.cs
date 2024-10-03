@@ -26,6 +26,11 @@ namespace MedicalClinic.Models
         [StringLength(100)]
         public string Password { get; set; }
 
+        /*
+         * 0 - человек
+         * 1 - доктор
+         * 2 - администратор
+         */
         [Required]
         public int Type { get; set; }
     }
