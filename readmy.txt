@@ -1,0 +1,19 @@
+Миграция базы данных
+enable-migrations
+Add-Migration InitialCreate
+Update-Database
+
+Обновление бд
+Remove-Migration
+Add-Migration InitialCreate
+Update-Database
+
+
+Аккаунты
+1@ex.com
+2@ex.com
+3@ex.com
+4@ex.com
+
+Пароли
+1234
