@@ -4,17 +4,23 @@
     ViewData["Title"] = "Добавить тип врача";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
 
-<form asp-action="TypeAdd" method="post">
-    <div>
-        <label for="Name">Название типа:</label>
-        <input type="text" id="Name" name="Name" value="@Model.Name" />
-    </div>
-    <div>
-        <label for="Description">Описание:</label>
-        <textarea id="Description" name="Description">@Model.Description</textarea>
-    </div>
+    <form asp-action="TypeAdd" method="post">
+        @Html.AntiForgeryToken() <!-- Защита от CSRF -->
 
-    <button type="submit">Добавить</button>
-</form>
+        <div class="mb-3">
+            <label for="Name" class="form-label">Название типа:</label>
+            <input type="text" id="Name" name="Name" value="@Model.Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">Описание:</label>
+            <textarea id="Description" name="Description" class="form-control" rows="4">@Model.Description</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        <a href="@Url.Action("TypeList", "Doctor")" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
