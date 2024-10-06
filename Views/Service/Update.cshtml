@@ -1,1 +1,56 @@
-﻿
+﻿@model MedicalClinic.Models.HtmlService
+
+@{
+    ViewData["Title"] = "Редактировать услугу";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Update" method="post">
+    @Html.AntiForgeryToken() <!-- Защита от CSRF -->
+    <input type="hidden" asp-for="Service.Id" />
+
+    <div>
+        <label for="Name">Название услуги:</label>
+        <input asp-for="Service.Name" class="form-control" required />
+        <span asp-validation-for="Service.Name" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label for="Description">Описание:</label>
+        <textarea asp-for="Service.Description" class="form-control"></textarea>
+        <span asp-validation-for="Service.Description" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label for="Price">Цена:</label>
+        <input asp-for="Service.Price" class="form-control" required />
+        <span asp-validation-for="Service.Price" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label for="IsActive">Активно:</label>
+        <input asp-for="Service.IsActive" type="checkbox" />
+        <span asp-validation-for="Service.IsActive" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Выберите типы врачей:</label>
+        @foreach (var doctorType in Model.DoctorTypes)
+        {
+            <div>
+                <input type="checkbox" name="SelectedDoctorTypeIds" value="@doctorType.Id"
+                @(Model.SelectedDoctorTypeIds.Contains(doctorType.Id) ? "checked" : "") />
+                <label>@doctorType.Name</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Обновить</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

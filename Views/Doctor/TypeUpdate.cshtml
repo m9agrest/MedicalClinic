@@ -1,4 +1,24 @@
-﻿@page
-@model MedicalClinic.Views.Doctor.TypeUpdateModel
+﻿@model MedicalClinic.Models.DoctorType
+
 @{
+    ViewData["Title"] = "Обновить тип врача";
 }
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+
+    <form asp-action="TypeUpdate" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group">
+            <label for="Name">Название типа:</label>
+            <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+        </div>
+        <div class="form-group">
+            <label for="Description">Описание:</label>
+            <textarea id="Description" name="Description" class="form-control" required>@Model.Description</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Обновить</button>
+    </form>
+</div>

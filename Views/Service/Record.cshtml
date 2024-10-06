@@ -1,0 +1,34 @@
+﻿@model MedicalClinic.Models.ServiceRecordViewModel
+
+@{
+    ViewData["Title"] = "Запись на прием";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+
+    <h3>Вы записываетесь к врачу: @Model.Doctor.Surname @Model.Doctor.Name</h3>
+    <h4>Услуга: @Model.Service.Name</h4>
+
+    <form asp-action="Record" method="post">
+        @Html.AntiForgeryToken() <!-- Защита от CSRF -->
+
+        <input type="hidden" name="doctorId" value="@Model.Doctor.Id" />
+        <input type="hidden" name="serviceId" value="@Model.Service.Id" />
+
+        <div class="form-group">
+            <label for="selectedTime">Выберите время:</label>
+            <select name="selectedTime" class="form-control" id="selectedTime" required>
+                <option value="">-- Выберите время --</option> <!-- Placeholder -->
+                @foreach (var timeSlot in Model.AvailableTimeSlots)
+                {
+                    <option value="@timeSlot">@timeSlot</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Записаться</button>
+    </form>
+
+    <a href="@Url.Action("Item", "Service", new { id = Model.Service.Id })" class="btn btn-secondary mt-3">Назад</a>
+</div>

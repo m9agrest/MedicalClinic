@@ -1,1 +1,52 @@
-﻿
+﻿@model List<MedicalClinic.Models.Service>
+
+@{
+    ViewData["Title"] = "Список услуг";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+
+    @if (ViewBag.Admin)
+    {
+        <a class="btn btn-success mb-3" href="@Url.Action("Add", "Service")">Добавить услугу</a>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <p>Нет услуг для отображения.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var service in Model)
+                {
+                    <tr>
+                        <td>@service.Name</td>
+                        <td>@service.Description</td>
+                        <td>@service.Price руб.</td>
+                        <td>@(service.IsActive ? "Активно" : "Неактивно")</td>
+                        <td>
+                            @if (ViewBag.Admin)
+                            {
+                                <a class="btn btn-warning" href="@Url.Action("Update", "Service", new { id = service.Id })">Изменить</a>
+                                <br />
+                            }
+                            <a class="btn btn-info" href="@Url.Action("Item", "Service", new { id = service.Id })">Просмотреть</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

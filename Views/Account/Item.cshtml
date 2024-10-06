@@ -1,1 +1,61 @@
-﻿
+﻿@model MedicalClinic.Models.HtmlHuman
+
+@{
+    ViewData["Title"] = Model.Human.Surname + " " + Model.Human.Name + " " + Model.Human.Patronymic;
+}
+
+<div class="container mt-4">
+    <!-- Заголовок -->
+    <h1 class="display-4">@Model.Human.Surname @Model.Human.Name @Model.Human.Patronymic</h1>
+
+    @if (Model.Human.Type > 0)
+    {
+        <!-- Описание для врачей -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h2 class="card-title">Врач</h2>
+                <p class="card-text">@Model.Human.Description</p>
+
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model.Human.HumanDoctorTypes)
+                    {
+                        <li class="list-group-item">@item.DoctorType.Name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    <!-- Кнопка выхода -->
+    @if (ViewBag.Logout)
+    {
+        <div class="mt-3">
+            <a class="btn btn-danger" href="@Url.Action("Logout", "Account")">Выход</a>
+        </div>
+    }
+
+    <!-- Панель редактирования и управления -->
+    @if (Model.isEditor)
+    {
+        <div class="card mt-4">
+            <div class="card-body">
+                <p><strong>Email:</strong> @Model.Human.Email</p>
+
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary" href="@Url.Action("List", "Account", new { client = Model.Human.Id, type = 1 })">Оказанные услуги</a>
+                    <a class="btn btn-secondary" href="@Url.Action("List", "Account", new { client = Model.Human.Id, type = 2 })">Предстоящие услуги</a>
+                </div>
+                <br />
+                @if (Model.Human.Type > 0)
+                {
+                    <div class="btn-group mt-2" role="group">
+                        <a class="btn btn-info" href="@Url.Action("List", "Account", new { doctor = Model.Human.Id, type = 3 })">Услуги, которые оказал</a>
+                        <a class="btn btn-info" href="@Url.Action("List", "Account", new { doctor = Model.Human.Id, type = 4 })">Услуги, которые окажет</a>
+                    </div>
+                }
+                <br />
+                <a class="btn btn-warning mt-3" href="@Url.Action("Update", "Account", new { id = Model.Human.Id })">Редактировать</a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,4 +1,20 @@
-﻿@page
-@model MedicalClinic.Views.Doctor.TypeAddModel
+﻿@model MedicalClinic.Models.DoctorType
+
 @{
+    ViewData["Title"] = "Добавить тип врача";
 }
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="TypeAdd" method="post">
+    <div>
+        <label for="Name">Название типа:</label>
+        <input type="text" id="Name" name="Name" value="@Model.Name" />
+    </div>
+    <div>
+        <label for="Description">Описание:</label>
+        <textarea id="Description" name="Description">@Model.Description</textarea>
+    </div>
+
+    <button type="submit">Добавить</button>
+</form>

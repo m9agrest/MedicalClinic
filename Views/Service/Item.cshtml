@@ -1,0 +1,50 @@
+﻿@model MedicalClinic.Models.HtmlService
+
+@{
+    ViewData["Title"] = "Просмотр услуги";
+}
+
+<div class="container mt-5">
+    <h1>@ViewData["Title"]</h1>
+
+    @if (Model.Service != null)
+    {
+        <div class="service-details">
+            <h2>@Model.Service.Name</h2>
+            <p><strong>Описание:</strong> @Model.Service.Description</p>
+            <p><strong>Цена:</strong> @Model.Service.Price руб.</p>
+            <p><strong>Статус:</strong> @(Model.Service.IsActive ? "Активно" : "Неактивно")</p>
+
+            @if (Model.isEditor)
+            {
+                <a class="btn btn-warning" href="@Url.Action("Update", "Service", new { id = Model.Service.Id })">Редактировать</a>
+            }
+        </div>
+
+        <div class="doctor-selection mt-4">
+            <h3>Выберите врача:</h3>
+            @if (Model.Doctors != null && Model.Doctors.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var doctor in Model.Doctors)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            @doctor.Surname @doctor.Name
+                            <a class="btn btn-primary" href="@Url.Action("Record", "Service", new { doctor = doctor.Id, service = Model.Service.Id })">Записаться</a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Нет врачей, оказывающих эту услугу.</p>
+            }
+        </div>
+
+        <a class="btn btn-secondary mt-3" href="@Url.Action("List", "Service")">Назад к списку услуг</a>
+    }
+    else
+    {
+        <p>Услуга не найдена.</p>
+    }
+</div>

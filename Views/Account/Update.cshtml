@@ -1,1 +1,64 @@
-﻿
+﻿@model MedicalClinic.Models.HtmlHuman
+
+@{
+    ViewData["Title"] = "Редактирование профиля";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    <form asp-action="Update" method="post" class="form-group">
+        @Html.AntiForgeryToken() <!-- Защита от CSRF -->
+        <input type="hidden" name="Human.Id" value="@Model.Human.Id" />
+
+        <div class="form-group">
+            <label for="Name">Имя:</label>
+            <input type="text" class="form-control" id="Name" name="Human.Name" placeholder="Имя" value="@Model.Human.Name" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Surname">Фамилия:</label>
+            <input type="text" class="form-control" id="Surname" name="Human.Surname" placeholder="Фамилия" value="@Model.Human.Surname" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Patronymic">Отчество:</label>
+            <input type="text" class="form-control" id="Patronymic" name="Human.Patronymic" placeholder="Отчество" value="@Model.Human.Patronymic" />
+        </div>
+
+        <div class="form-group">
+            <label>Тип пользователя:</label>
+            <div>
+                <input type="radio" id="client" name="Human.Type" value="0" @(Model.Human.Type == 0 ? "checked" : "") />
+                <label for="client">Обычный клиент</label>
+            </div>
+            <div>
+                <input type="radio" id="doctor" name="Human.Type" value="1" @(Model.Human.Type == 1 ? "checked" : "") />
+                <label for="doctor">Доктор</label>
+            </div>
+            <div>
+                <input type="radio" id="admin" name="Human.Type" value="2" @(Model.Human.Type == 2 ? "checked" : "") />
+                <label for="admin">Администратор</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Description">Описание доктора:</label>
+            <textarea class="form-control" id="Description" name="Human.Description" placeholder="Описание">@Model.Human.Description</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Выберите типы врачей:</label>
+            @foreach (var doctorType in Model.DoctorTypes)
+            {
+                <div>
+                    <input type="checkbox" name="SelectedDoctorTypeIds" value="@doctorType.Id"
+                    @(Model.SelectedDoctorTypeIds.Contains(doctorType.Id) ? "checked" : "") />
+                    <label>@doctorType.Name</label>
+                </div>
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
