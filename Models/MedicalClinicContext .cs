@@ -1,55 +1,43 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace MedicalClinic.Models
 {
-    public class MedicalClinicContext : DbContext
-    {
-        public MedicalClinicContext(DbContextOptions<MedicalClinicContext> options)
-            : base(options)
-        {
-        }
+	public class MedicalClinicContext : DbContext
+	{
+		public MedicalClinicContext(DbContextOptions<MedicalClinicContext> options)
+			: base(options) // передаем параметры в базовый конструктор
+		{
+		}
 
-        // Таблицы
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<DoctorType> DoctorTypes { get; set; }
-        public DbSet<Human> Humans { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<ServiceList> ServiceLists { get; set; }
+		public DbSet<Human> Humans { get; set; }
+		public DbSet<DoctorType> DoctorTypes { get; set; }
+		public DbSet<Service> Services { get; set; }
+		public DbSet<ServiceList> ServiceLists { get; set; }
+		public DbSet<HumanDoctorType> HumanDoctorTypes { get; set; }
+		public DbSet<ServiceDoctorType> ServiceDoctorTypes { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Определение связей и конфигураций
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
 
-            // Связь Doctor с Human
-            modelBuilder.Entity<Doctor>()
-                .HasOne(d => d.Human)
-                .WithMany() // В случае, если у Human несколько докторов, здесь можно использовать .WithMany(h => h.Doctors)
-                .HasForeignKey(d => d.HumanId);
+			modelBuilder.Entity<ServiceList>()
+				.HasOne(s => s.Client)
+				.WithMany()
+				.HasForeignKey(s => s.ClientId)
+				.OnDelete(DeleteBehavior.Restrict); // Измените на Restrict
 
-            // Связь Service с DoctorType (многие ко многим)
-            modelBuilder.Entity<Service>()
-                .HasMany(s => s.Executor)
-                .WithMany();
+			modelBuilder.Entity<ServiceList>()
+				.HasOne(s => s.Doctor)
+				.WithMany()
+				.HasForeignKey(s => s.DoctorId)
+				.OnDelete(DeleteBehavior.Restrict); // Измените на Restrict
 
-            // Связь ServiceList с Doctor
-            modelBuilder.Entity<ServiceList>()
-                .HasOne<Doctor>()
-                .WithMany()
-                .HasForeignKey(sl => sl.DoctorId);
+			modelBuilder.Entity<ServiceList>()
+				.HasOne(s => s.Service)
+				.WithMany()
+				.HasForeignKey(s => s.ServiceId)
+				.OnDelete(DeleteBehavior.Cascade);
+		}
 
-            // Связь ServiceList с Service
-            modelBuilder.Entity<ServiceList>()
-                .HasOne<Service>()
-                .WithMany()
-                .HasForeignKey(sl => sl.ServiceId);
-
-            // Связь ServiceList с Human (ClientId)
-            modelBuilder.Entity<ServiceList>()
-                .HasOne<Human>()
-                .WithMany()
-                .HasForeignKey(sl => sl.ClientId);
-        }
-    }
+	}
 }
