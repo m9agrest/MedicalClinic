@@ -306,56 +306,64 @@ namespace MedicalClinic.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(HtmlHuman model)
-        {
-            var currentUser = GetCurrentUser();
+public IActionResult Update(HtmlHuman model)
+{
+    var currentUser = GetCurrentUser();
 
-            // Проверяем права доступа: текущий пользователь или администратор может редактировать
-            if ((currentUser == null || currentUser.Id != model.Human.Id) && !IsAdmin())
+    // Проверяем права доступа: текущий пользователь или администратор может редактировать
+    if ((currentUser == null || currentUser.Id != model.Human.Id) && !IsAdmin())
+    {
+        return Forbid();
+    }
+
+    // Загружаем пользователя из базы данных
+    var userToUpdate = context.Humans
+        .Include(u => u.HumanDoctorTypes) // Включаем связанные типы врачей
+        .FirstOrDefault(u => u.Id == model.Human.Id);
+
+    if (userToUpdate == null)
+    {
+        return NotFound(); // Возвращаем ошибку, если пользователь не найден
+    }
+
+    // Обновляем данные пользователя
+    userToUpdate.Name = model.Human.Name;
+    userToUpdate.Surname = model.Human.Surname;
+    userToUpdate.Patronymic = model.Human.Patronymic;
+
+    if (currentUser.Type == 2)   // Администратор может изменить тип
+    {
+        userToUpdate.Type = model.Human.Type;
+    }
+
+    // Если тип пользователя изменился на 0 (не врач), то обнуляем описание и удаляем связанные типы врачей
+    if (userToUpdate.Type == 0)
+    {
+        userToUpdate.Description = null;
+
+        // Удаляем все связанные типы врачей
+        userToUpdate.HumanDoctorTypes.Clear();
+    }
+    else
+    {
+        // Если это доктор, обновляем описание и типы врачей
+        userToUpdate.Description = model.Human.Description;
+
+        // Обновляем типы врачей, если это доктор
+        userToUpdate.HumanDoctorTypes = context.DoctorTypes
+            .Where(dt => model.SelectedDoctorTypeIds.Contains(dt.Id))
+            .Select(dt => new HumanDoctorType
             {
-                return Forbid();
-            }
+                HumanId = userToUpdate.Id,
+                DoctorTypeId = dt.Id
+            }).ToList();
+    }
 
-            // Загружаем пользователя из базы данных
-            var userToUpdate = context.Humans
-                .Include(u => u.HumanDoctorTypes) // Включаем связанные типы врачей
-                .FirstOrDefault(u => u.Id == model.Human.Id);
+    // Сохраняем изменения в базе данных
+    context.Humans.Update(userToUpdate);
+    context.SaveChanges();
 
-            if (userToUpdate == null)
-            {
-                return NotFound(); // Возвращаем ошибку, если пользователь не найден
-            }
-
-            // Обновляем данные пользователя
-            userToUpdate.Name = model.Human.Name;
-            userToUpdate.Surname = model.Human.Surname;
-            userToUpdate.Patronymic = model.Human.Patronymic;
-
-            if (currentUser.Type == 2)   // Администратор может изменить тип
-            {
-                userToUpdate.Type = model.Human.Type;
-            }
-
-            // Обновляем описание, если это доктор
-            if (userToUpdate.Type > 0)
-            {
-                userToUpdate.Description = model.Human.Description;
-
-                // Обновляем типы врачей, если это доктор
-                userToUpdate.HumanDoctorTypes = context.DoctorTypes
-                    .Where(dt => model.SelectedDoctorTypeIds.Contains(dt.Id))
-                    .Select(dt => new HumanDoctorType
-                    {
-                        HumanId = userToUpdate.Id,
-                        DoctorTypeId = dt.Id
-                    }).ToList();
-            }
-
-            // Сохраняем изменения в базе данных
-            context.Humans.Update(userToUpdate);
-            context.SaveChanges();
-
-            return RedirectToAction("Index", new { id = model.Human.Id });
-        }
+    return RedirectToAction("Index", new { id = model.Human.Id });
+}
     }
 }
